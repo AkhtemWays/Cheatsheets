@@ -1,0 +1,171 @@
+<div class="card">
+
+    <h2 [ngStyle]="{
+    color:  card.title.length < 5 ? 'red' : 'blue',
+    fontWeight: card.title.length < 7 ? 'normal' : 'bold'
+  }"> [[card.title]] </h2>
+  <!-- [class]="getClasses()"
+       [class.bg-success]="model.getClasses().length >= 50
+       [class.bg-info]="model.getClasses().length < 50" "
+       [ngClass]="{'bg-info: true, 'bg-success': false}"
+       Оценивает по булевским значениям -->
+       <!-- [style.fontSize]="variable"
+            [style.margin.px]="variable2"
+            [ngStyle]={fontSize: variable, margin.px: variable2} а лучше верни это в объекте за пределами статичного файла -->
+
+    <!-- <div *ngIf="variable.name.length >4 ">your name is more than 4 characters long</div>  -->
+    <!-- <div [ngSwitch]="variable.name.length">
+           <div *ngSwitchCase="4">4 characters</div>
+           <div *ngSwitchCase="5">5 characters</div>
+           <div *ngSwitchDefault >This is default</div>
+         </div> -->
+         <!-- <div>Selected Product: {{selectedProduct || '(None)'}}</div> -->
+    <!-- <table>
+      <thead>
+      <tr><th>Category</th><th>Name</th><th>Price</th></tr>
+      </thead>
+      <tr *ngFor="let item of getItems(); let i = index; let first = first; let last = last; let odd = odd";trackBy:getKey></tr>
+       trackBy добавляется для отслежки изменений и оптимизации, реализация getKey(index: number, p: Product) {return p.id}
+        [class.bg-info]="!odd" [class.bg-warning]="odd"
+        [class.bg-warning]="first || last" последнее условие будет сильнее так как оно последнее
+        <td (mouseover)="selectedProduct=item.name">{{index + 1}}</td> переменная selectedProduct определяется только здесь динамически, в классе ее нет
+        <td>{{item.category}}</td>
+        <td>{{item.name}}</td>
+        <td>{{item.price}}</td>
+          </table> -->
+          <!-- определение аутлета -->
+      <!-- <ng-template #MyTemplate let-text="title">
+        <h1>{{ title }}</h1>
+      </ng-template> -->
+      <!-- его применение
+        <ng-template [ngTemplateOutlet]="MyTemplate" [ngTemplateOutletContext]="{title: 'Ambassador'}" ></ng-template>
+      -->
+      <!-- <div class="form-group">
+              <label>Input element</label>
+              <input class="form-control" (input)=$event.target.value /> (input) это value в input элементе
+
+           </div> -->
+      <!-- <input #product class="form-control" (keyup.enter)="selectedProduct=product.value" /> -->
+      <!-- (keyup) будет изменять всегда когда евент тригернулся а keyup.enter только когда на энтере -->
+      <!-- <input #product class="form-control" (input)="false" /> если установить (input)="false" и поставить ссылку на
+            переменную #product то автоматически значение это переменной будет устанавливаться в value от этого хтмл элемента-->
+
+
+
+      <!-- Two way data bindings -->
+      <div class="m-2">
+        <div class="bg-info text-white p-2">
+            Selected Product: {{SelectedProduct || '(None)'}}
+        </div>
+        <table class="table table-striped table-sm">
+            <thead>
+              <tr><th></th><th>Name</th><th>Category</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of getProducts(); let i = index" [class.bg-info]="getSelected(item)">
+                <td (mouseover)="selectedProduct=item.name">{{i + 1}}</td>
+                <td>{{item.category}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.price}}</td>
+              </tr>
+            </tbody>
+        </table>
+        <div class="form-group">
+          <label>Product Name</label>
+          <input class="form-control" (input)="selectedProduct=$event.target.value" [value]="selectedProduct || """ />
+        </div>
+        <div class="form-group">
+          <label>Product Name</label>
+          <!-- (input) event присваивает значение переменной и потом валуе покаывает его, в результате изменения синхронизируются
+                и изменяются в обоих местах. Иными словами инпут это как в реакте сетСтэйт а валуе это сам валуе -->
+          <input class="form-control" (input)="selectedProduct=$event.target.value" [value]="selectedProduct || """ />
+          <!-- а вот крутая альтернатива от ангуляра -->
+          <!-- ngModel -->
+          <input [(ngModel)]="selectedProduct" />
+        </div>
+      </div>
+      <!-- форма ангуляра -->
+      <!-- стиль форм ангуляра которые будут выданы пользователю и их можно прям тут стилизовать -->
+      <style>
+        input.ng-dirty.ng-invalid {border: 2px solid #ff0000}
+        input.ng-dirty.ng-valid {border: 2px solid #6bc502}
+      </style>
+      <!-- новалидэйт означает что не нужно пользоваться хтмл валидаторами, а используй ангуляровские,
+       к аттрибуту нэйм можно будет ссылаться только тогда когда форма валидирована
+      в браузере можно увидеть классы этой формы ng-pristine ng-dirty ng-untouched ng-touched ng-valid ng-invalid -->
+      <!-- form это ссылка на эту форму саму -->
+      <form novalidate (ngSubmit)="submitForm(form)">
+         <!--конечная валидация формы  -->
+        <div class="bg-danger text-white p-2 mb-2" *ngIf="formSubmitted && form.invalid">
+          There are problems with the form
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <!-- #name="ngModel" делается для создания ссылочной переменной, которую потом можно использовать снаружи где нибудь -->
+          <input class="form-control" name="name" [(ngModel)]="newProduct.name" #name="ngModel" required minLength="5" pattern="^[A-Za-z]+$" />
+          <!-- Здесь идут сообщения для пользователя от неправильной валидации -->
+          <ul class="text-danger list-unstyled" *ngIf="(formSubmitted || name.dirty) && name.invalid">
+            <li *ngIf="name.errors?.required">
+              You must enter a product name
+            </li>
+            <li *ngIf="name.errors?.pattern">
+              Sir you entered {{name.errors.pattern.actualValue}}, but you need to follow this {{name.errors.pattern.requiredPattern}} pattern
+            </li>
+            <li *ngIf="name.errors?.minLength">
+              You have to put {{name.errors.minLength.requiredLength}} characters long, but instead you put
+              {{name.errors.minLength.actualLength}}
+            </li>
+          </ul>
+          <!-- Те же сообщения но с помощью внешнего метода внутри компонента -->
+          <ul class="text-danger list-unstyled" *ngIf="name.dirty && name.invalid">
+            <li *ngFor="let error of getValidationMessages(name)">
+              {{error}}
+            </li>
+          </ul>
+          <!-- или вот так вот -->
+          <ul>
+            <li *ngFor="let error of getFormValidationMessages(form)">
+              {{error}}
+            </li>
+          </ul>
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+
+
+
+  <h1 [attr.textContent]="title"></h1>
+    <!-- <h1 class="text" [ngClass]="{
+    blue: textColor === 'blue',
+    green: textColor === 'green',
+    red: textColor === 'red'
+
+  }"> [[text]]</h1> -->
+    <h1 class="text" [class.blue]="'textColor === blue'" [class.green]="'textColor === green'" [class.red]="'textColor === red'">
+        [[index]] [[card.text]]
+    </h1>
+    <em>[[array]]</em>
+    <pre>[[ obj | json ]]</pre>
+    <p>[[ getInfo() ]]</p>
+    <img [src]="imgUrl">
+    <br>
+    <button [disabled]="disabled">Enable</button>
+    <div class="buttons">
+        <button (click)="textColor = 'red'">Make red</button>
+        <button (click)="textColor = 'blue'">Make blue</button>
+        <button (click)="textColor = 'green'">Make green</button>
+    </div>
+    <div>
+        <button (click)="changeTitle()">Change title</button>
+        <button (click)="card.title = 'inline title'">Inline change</button>
+    </div>
+    <div>
+        <!-- <input class="margin" type="text" (input)="inputHandler($event)" [value]="title" />
+    <input class="margin" #myInput type="text" (input)="inputHandler(myInput.value)" [value]="title" /> -->
+        <input type="text" [(ngModel)]="card.title" (ngModelChange)="changeHandler()">
+    </div>
+    <div>
+        <strong>[[ cardDate | date:'dd MMMM yy':null:'ru' ]]</strong>
+        <p></p>
+    </div>
+</div>

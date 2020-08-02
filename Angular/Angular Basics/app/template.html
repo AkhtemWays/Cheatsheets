@@ -1,0 +1,52 @@
+<style>
+  input.ng-dirty.ng-invalid { border: 2px solid #ff0000 }
+  input.ng-dirty.ng-valid { border: 2px solid #6bc502 }
+</style>
+<div class="row m-2">
+  <div class="col-6">
+<form class="m-2" novalidate [formGroup]="form" (ngSubmit)="submitForm(form)">
+
+  <div class="bg-danger text-white p-2 mb-2" *ngIf="formSubmitted && form.invalid">
+      There are problems with the form
+      <ul>
+          <li *ngFor="let error of form.getFormValidationMessages()">
+              {{error}}
+          </li>
+      </ul>
+  </div>
+
+  <div class="form-group" *ngFor="let control of form.productControls">
+      <label>{{control.label}}</label>
+      <input class="form-control"
+          [(ngModel)]="newProduct[control.modelProperty]"
+          name="{{control.modelProperty}}"
+          formControlName="{{control.modelProperty}}" />
+      <ul class="text-danger list-unstyled"
+              *ngIf="(formSubmitted || control.dirty) && control.invalid">
+          <li *ngFor="let error of control.getValidationMessages()">
+              {{error}}
+          </li>
+      </ul>
+  </div>
+
+  <button class="btn btn-primary" type="submit"
+      [disabled]="formSubmitted && form.invalid"
+      [class.btn-secondary]="formSubmitted && form.invalid">
+          Create
+  </button>
+</form>
+</div>
+<div class="col-6">
+  <table class="table table-sm table-bordered table-striped">
+     <tr><th></th><th>Name</th><th>Category</th><th>Price</th></tr>
+     <tr *ngFor="let item of getProducts(); let i = index" [pa-attr]="getProducts().length < 6 ? 'bg-success' : 'bg-warning'"></tr>
+     <!-- <tr *ngFor="let item of getProducts(); let i = index" pa-attr> -->
+<!-- сильная сторона атрибутовских директив это то что мы можем делать дефолт в самом классе а тут либо добавлять либо изменять -->
+      <td>{{i + 1}}</td>
+      <td>{{item.name}}</td>
+      <td [pa-attr]="item.category == 'Soccer' ? 'bg-warning' : null">{{item.category}}</td>
+      <td pa-attr="bg-info">{{item.price}}</td>
+     </tr>
+  </table>
+</div>
+</div>
