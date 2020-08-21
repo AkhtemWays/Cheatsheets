@@ -1,0 +1,57 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    width: 100%;
+    background: lightblue;
+    margin-left: 15px;
+}
+
+header li {
+    display: inline-block;
+}
+
+header a {
+    text-decoration: none;
+}
+
+.header-wrap {
+    width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+aside {
+    width: 30%;
+}
+
+.post-item {
+    width: 23%;
+    height: 30px;
+    display: inline-block;
+    background-repeat: no-repeat;
+}
+
+section {
+    width: 70%;
+}
+
+main {
+    display: flex;
+    width: 75%;
+}
+
+input {
+    margin-top: 15px;
+}
+
+@media screen and (max-width: 800px) {
+    .post-item {
+        width: 30%;
+    }
+}
+
+@media screen and (max-width: 980px) {}
